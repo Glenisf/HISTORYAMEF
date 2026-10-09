@@ -1,0 +1,587 @@
+/* =========================
+   1. GENERAL Y VARIABLES
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --fondo: #fff8f8;
+    --blanco: #ffffff;
+    --texto: #2d2426;
+    --secundario: #806f72;
+    --rosa: #c85c72;
+    --rosa-claro: #f8e5e9;
+    --borde: #f0d9de;
+}
+
+body {
+    font-family: "DM Sans", sans-serif;
+    background: var(--fondo);
+    color: var(--texto);
+    min-height: 100vh;
+}
+
+/* Quitar azul y subrayado por defecto en todos los enlaces */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/* =========================
+   2. NAVBAR (BARRA SUPERIOR)
+========================= */
+
+.navbar {
+    width: 100%;
+    padding: 20px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--borde);
+    background: rgba(255, 248, 248, 0.9);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+}
+
+.logo {
+    font-family: "Playfair Display", serif;
+    font-size: 21px;
+}
+
+.navbar nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar nav a {
+    text-decoration: none;
+    padding: 9px 13px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--secundario);
+    border-radius: 20px;
+    transition: 0.2s;
+    display: inline-block;
+}
+
+.navbar nav a:hover,
+.navbar nav a.active {
+    background: var(--rosa-claro);
+    color: var(--rosa);
+}
+
+.cerrar-sesion {
+    background: none;
+    border: 1px solid var(--borde);
+    padding: 9px 13px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--secundario);
+    cursor: pointer;
+    border-radius: 20px;
+    transition: 0.2s;
+}
+
+.cerrar-sesion:hover {
+    background: var(--rosa);
+    color: var(--blanco);
+    border-color: var(--rosa);
+}
+
+
+/* =========================
+   3. SECCIONES Y ANIMACIÓN
+========================= */
+
+.seccion {
+    width: 100%;
+    max-width: 1100px;
+    margin: auto;
+    padding: 70px 25px;
+    animation: aparecer 0.35s ease;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================
+   4. HERO Y CONTADOR
+========================= */
+
+.hero {
+    text-align: center;
+    max-width: 750px;
+    margin: auto;
+}
+
+.pequeno {
+    color: var(--rosa);
+    font-size: 12px;
+    letter-spacing: 3px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+h1 {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(38px, 6vw, 65px);
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.descripcion {
+    color: var(--secundario);
+    max-width: 500px;
+    margin: auto;
+    line-height: 1.7;
+}
+
+.foto-principal {
+    margin: 40px auto;
+    max-width: 500px;
+}
+
+.foto-placeholder {
+    aspect-ratio: 4 / 3;
+    border-radius: 24px;
+    background: var(--rosa-claro);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+    border: 1px solid var(--borde);
+}
+
+.contador {
+    margin: 35px auto 50px;
+}
+
+.contador > p:first-child {
+    color: var(--secundario);
+}
+
+#dias {
+    display: block;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(65px, 10vw, 100px);
+    color: var(--rosa);
+    line-height: 1;
+    margin: 10px 0;
+}
+
+.contador h2 {
+    font-family: "Playfair Display", serif;
+    font-weight: 500;
+    font-size: 27px;
+}
+
+.frase {
+    margin-top: 15px;
+    color: var(--secundario);
+    font-style: italic;
+}
+
+
+/* =========================
+   5. MENU Y TARJETAS
+========================= */
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    max-width: 850px;
+    margin: auto;
+}
+
+.card {
+    text-align: left;
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: 20px;
+    padding: 25px;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: none;
+    color: var(--texto);
+    transition: 0.25s;
+    display: block;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(100, 50, 60, 0.08);
+}
+
+.card span {
+    font-size: 28px;
+    display: block;
+}
+
+.card h3 {
+    margin-top: 15px;
+    font-size: 18px;
+}
+
+.card p {
+    margin-top: 7px;
+    color: var(--secundario);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+/* =========================
+   6. PAGINAS Y BOTON VOLVER
+========================= */
+
+.pagina {
+    max-width: 800px;
+    margin: auto;
+}
+
+.volver {
+    border: none;
+    background: none;
+    color: var(--rosa);
+    font-family: inherit;
+    cursor: pointer;
+    margin-bottom: 40px;
+    font-size: 15px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.volver:hover {
+    opacity: 0.8;
+}
+
+
+/* =========================
+   7. SECCIÓN NOTAS Y BUSCADOR
+========================= */
+
+.controles-notas {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.controles-notas input {
+    flex: 1;
+    min-width: 220px;
+    padding: 12px 18px;
+    border-radius: 16px;
+    border: 1px solid var(--borde);
+    background: var(--blanco);
+    color: var(--texto);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.controles-notas input:focus {
+    border-color: var(--rosa);
+    box-shadow: 0 0 0 3px rgba(200, 92, 114, 0.12);
+}
+
+.btn-crear-nota {
+    background: var(--rosa);
+    color: var(--blanco);
+    border: none;
+    padding: 12px 22px;
+    border-radius: 16px;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-crear-nota:hover {
+    background: #b34e63;
+    transform: translateY(-2px);
+}
+
+.carta {
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: 22px;
+    padding: 35px;
+    line-height: 1.9;
+    margin-top: 20px;
+    box-shadow: 0 10px 30px rgba(100, 50, 60, 0.04);
+}
+
+.fecha {
+    color: var(--rosa);
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+
+/* =========================
+   8. CARTITAS
+========================= */
+
+.cartas-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 35px;
+}
+
+.carta-card {
+    border: 1px solid var(--borde);
+    background: var(--blanco);
+    padding: 25px;
+    border-radius: 18px;
+    text-align: left;
+    font-family: inherit;
+    cursor: pointer;
+    transition: 0.2s;
+    width: 100%;
+}
+
+.carta-card:hover {
+    background: var(--rosa-claro);
+}
+
+.carta-card span {
+    font-size: 27px;
+}
+
+.carta-card h3 {
+    margin-top: 12px;
+    font-size: 16px;
+}
+
+
+/* =========================
+   9. RECUERDOS Y FOTOS
+========================= */
+
+.recuerdos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 35px;
+}
+
+.recuerdo {
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.recuerdo-foto {
+    aspect-ratio: 16 / 10;
+    background: var(--rosa-claro);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+}
+
+.recuerdo img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+}
+
+.recuerdo h3 {
+    padding: 20px 20px 5px;
+}
+
+.recuerdo p {
+    padding: 0 20px;
+    color: var(--secundario);
+    line-height: 1.6;
+}
+
+.recuerdo span {
+    display: block;
+    padding: 15px 20px 20px;
+    font-size: 12px;
+    color: var(--rosa);
+}
+
+
+/* =========================
+   10. MODAL Y FORMULARIOS
+========================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(35, 20, 25, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+}
+
+.modal.activo {
+    display: flex;
+}
+
+.modal-contenido {
+    position: relative;
+    background: var(--blanco);
+    max-width: 450px;
+    width: 100%;
+    padding: 45px 35px;
+    border-radius: 25px;
+    text-align: center;
+}
+
+.cerrar {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    border: none;
+    background: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--secundario);
+}
+
+.sorpresa-icono {
+    font-size: 45px;
+}
+
+.modal h2 {
+    font-family: "Playfair Display", serif;
+    font-size: 30px;
+    margin: 20px 0 12px;
+}
+
+.modal p {
+    color: var(--secundario);
+    line-height: 1.7;
+}
+
+.modal textarea {
+    width: 100%;
+    padding: 15px;
+    border-radius: 16px;
+    border: 1px solid var(--borde);
+    background: var(--fondo);
+    color: var(--texto);
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    outline: none;
+    margin-top: 15px;
+    transition: 0.2s;
+}
+
+.modal textarea:focus {
+    border-color: var(--rosa);
+    background: var(--blanco);
+}
+
+.boton-principal {
+    margin-top: 25px;
+    border: none;
+    background: var(--rosa);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.btn-enviar-modal {
+    width: 100%;
+    margin-top: 15px;
+    height: auto;
+    padding: 14px;
+    border-radius: 16px;
+    background: var(--rosa);
+    color: var(--blanco);
+    font-weight: 500;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-enviar-modal:hover {
+    background: #b34e63;
+}
+
+
+/* =========================
+   11. RESPONSIVE (MÓVILES)
+========================= */
+
+@media (max-width: 700px) {
+
+    .navbar {
+        padding: 12px 15px;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .navbar nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+        width: 100%;
+    }
+
+    .navbar nav a,
+    .cerrar-sesion {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+
+    .seccion {
+        padding: 35px 15px;
+    }
+
+    .menu-grid,
+    .cartas-grid,
+    .recuerdos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .controles-notas {
+        flex-direction: column;
+    }
+
+    .btn-crear-nota {
+        width: 100%;
+    }
+
+    .foto-placeholder {
+        border-radius: 18px;
+    }
+
+    .carta {
+        padding: 25px;
+    }
+
+}

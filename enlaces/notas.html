@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Historia ❤️ - Notas</title>
+    
+    <link rel="stylesheet" href="../css/cssnotas.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">❤️ Nuestra historia</div>
+        <nav>
+            <a href="../home.html">Inicio</a>
+            <a href="notas.html" class="active">Notita</a>
+            <a href="cartas.html">Cartas</a>
+            <a href="recuerdos.html">Recuerdos</a>
+            <button class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="seccion activa">
+            <a href="../index.html" class="volver">← Volver</a>
+
+            <div class="pagina">
+                <p class="pequeno">NUESTRAS NOTAS</p>
+                <h1>Notitas Diarias ❤️</h1>
+
+                <!-- Buscador y Botón Crear -->
+                <div class="controles-notas">
+                    <input 
+                        type="text" 
+                        id="buscadorNotas" 
+                        placeholder="🔍 Buscar palabras o fecha (ej: 14/02)..." 
+                        oninput="filtrarNotas()"
+                    >
+                    <button type="button" class="boton-principal" onclick="abrirModal()">
+                        + Escribir nota
+                    </button>
+                </div>
+
+                <!-- Lista de Notas -->
+                <div id="contenedorNotas" class="cartas-grid">
+                    <p>Cargando notas...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Escribir Nota -->
+    <div id="modalNuevaNota" class="modal">
+        <div class="modal-contenido">
+            <button type="button" class="cerrar" onclick="cerrarModal()">×</button>
+            <h2>Escribir nueva nota 📝</h2>
+            <form id="formNuevaNota" onsubmit="event.preventDefault(); guardarNota();">
+                <textarea 
+                    id="contenidoNota" 
+                    placeholder="Escriba aquí su mensaje del día..." 
+                    rows="5" 
+                    required
+                ></textarea>
+                <button type="button" class="btn-enviar-modal" onclick="guardarNota()">Publicar Nota</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SDK Oficial de Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Script principal con la conexión -->
+    <script src="../js/notas.js"></script>
+
+    <script>
+        let todasLasNotas = [];
+
+        function abrirModal() {
+            const modal = document.getElementById('modalNuevaNota');
+            if (modal) {
+                modal.style.display = 'flex';
+                modal.classList.add('activo');
+            }
+        }
+
+        function cerrarModal() {
+            const modal = document.getElementById('modalNuevaNota');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.classList.remove('activo');
+            }
+        }
+
+        // Cargar notas desde Supabase
+        async function cargarNotas() {
+            const contenedor = document.getElementById('contenedorNotas');
+            if (!contenedor) return;
+
+            if (typeof supabaseClient === 'undefined') {
+                contenedor.innerHTML = '<p style="color: red;">Error: supabaseClient no está definido en script.js</p>';
+                return;
+            }
+
+            try {
+                const { data: notas, error } = await supabaseClient
+                    .from('notas')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error("Error al obtener notas:", error);
+                    contenedor.innerHTML = `<p>Error de base de datos: ${error.message}</p>`;
+                    return;
+                }
+
+                todasLasNotas = notas || [];
+                renderizarNotas(todasLasNotas);
+            } catch (err) {
+                console.error("Excepción en cargarNotas:", err);
+                contenedor.innerHTML = `<p style="color: red;">Error inesperado: ${err.message}</p>`;
+            }
+        }
+
+        // Mostrar las notas en pantalla
+        function renderizarNotas(lista) {
+            const contenedor = document.getElementById('contenedorNotas');
+            if (!contenedor) return;
+
+            if (!lista || lista.length === 0) {
+                contenedor.innerHTML = '<p>No hay notas escritas aún. ¡Escriba la primera!</p>';
+                return;
+            }
+
+            contenedor.innerHTML = '';
+            lista.forEach(nota => {
+                const fechaObj = new Date(nota.created_at);
+                const fechaFormateada = fechaObj.toLocaleDateString('es-ES', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric' 
+                });
+                const horaFormateada = fechaObj.toLocaleTimeString('es-ES', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+
+                const tarjeta = document.createElement('div');
+                tarjeta.className = 'carta';
+                tarjeta.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span class="fecha" style="font-weight: 600;">✍️ ${nota.autor || 'Anónimo'}</span>
+                        <span style="font-size: 0.85rem; opacity: 0.8;">${fechaFormateada} - ${horaFormateada}</span>
+                    </div>
+                    <p style="white-space: pre-wrap; line-height: 1.6;">${nota.contenido}</p>
+                `;
+                contenedor.appendChild(tarjeta);
+            });
+        }
+
+        // Guardar nota en Supabase
+        async function guardarNota() {
+            const textarea = document.getElementById('contenidoNota');
+            const contenido = textarea.value.trim();
+            
+            if (!contenido) {
+                alert("Por favor escriba una nota antes de publicar.");
+                return;
+            }
+
+            if (typeof supabaseClient === 'undefined') {
+                alert("Error: La conexión a Supabase no está configurada en script.js");
+                return;
+            }
+
+            let autorNombre = 'Anónimo';
+            try {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session && session.user && session.user.email) {
+                    autorNombre = session.user.email.split('@')[0];
+                }
+            } catch (err) {
+                console.warn("No se pudo obtener el usuario:", err);
+            }
+
+            const { error } = await supabaseClient
+                .from('notas')
+                .insert([{ contenido: contenido, autor: autorNombre }]);
+
+            if (error) {
+                alert('Error al publicar la nota en Supabase:\n' + error.message);
+                console.error('Detalle del error:', error);
+            } else {
+                textarea.value = '';
+                cerrarModal();
+                cargarNotas();
+            }
+        }
+
+        // Buscador
+        function filtrarNotas() {
+            const input = document.getElementById('buscadorNotas');
+            if (!input) return;
+            
+            const busqueda = input.value.toLowerCase().trim();
+            const filtradas = todasLasNotas.filter(nota => {
+                const contenido = (nota.contenido || '').toLowerCase();
+                const autor = (nota.autor || '').toLowerCase();
+                const fecha = new Date(nota.created_at).toLocaleDateString('es-ES');
+                return contenido.includes(busqueda) || autor.includes(busqueda) || fecha.includes(busqueda);
+            });
+            renderizarNotas(filtradas);
+        }
+
+        // Inicialización al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarNotas();
+            if (typeof verificarSesion === 'function') {
+                verificarSesion();
+            }
+        });
+    </script>
+</body>
+</html>

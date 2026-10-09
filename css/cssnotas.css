@@ -1,0 +1,364 @@
+/* =========================
+   1. GENERAL Y VARIABLES
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --fondo: #fff8f8;
+    --blanco: #ffffff;
+    --texto: #2d2426;
+    --secundario: #806f72;
+    --rosa: #c85c72;
+    --rosa-claro: #f8e5e9;
+    --borde: #f0d9de;
+}
+
+body {
+    font-family: "DM Sans", sans-serif;
+    background: var(--fondo);
+    color: var(--texto);
+    min-height: 100vh;
+}
+
+/* Limpieza de enlaces */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/* =========================
+   2. NAVBAR
+========================= */
+
+.navbar {
+    width: 100%;
+    padding: 20px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--borde);
+    background: rgba(255, 248, 248, 0.9);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+}
+
+.logo {
+    font-family: "Playfair Display", serif;
+    font-size: 21px;
+}
+
+.navbar nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar nav a {
+    text-decoration: none;
+    padding: 9px 13px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--secundario);
+    border-radius: 20px;
+    transition: 0.2s;
+    display: inline-block;
+}
+
+.navbar nav a:hover,
+.navbar nav a.active {
+    background: var(--rosa-claro);
+    color: var(--rosa);
+}
+
+.cerrar-sesion {
+    background: none;
+    border: 1px solid var(--borde);
+    padding: 9px 13px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--secundario);
+    cursor: pointer;
+    border-radius: 20px;
+    transition: 0.2s;
+}
+
+.cerrar-sesion:hover {
+    background: var(--rosa);
+    color: var(--blanco);
+    border-color: var(--rosa);
+}
+
+
+/* =========================
+   3. ESTRUCTURA Y CABECERA
+========================= */
+
+.seccion {
+    width: 100%;
+    max-width: 1100px;
+    margin: auto;
+    padding: 70px 25px;
+    animation: aparecer 0.35s ease;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pagina {
+    max-width: 800px;
+    margin: auto;
+}
+
+.volver {
+    border: none;
+    background: none;
+    color: var(--rosa);
+    font-family: inherit;
+    cursor: pointer;
+    margin-bottom: 40px;
+    font-size: 15px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.volver:hover {
+    opacity: 0.8;
+}
+
+.pequeno {
+    color: var(--rosa);
+    font-size: 12px;
+    letter-spacing: 3px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+h1 {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(38px, 6vw, 55px);
+    font-weight: 500;
+    margin-bottom: 25px;
+}
+
+
+/* =========================
+   4. BUSCADOR Y BOTÓN CREAR
+========================= */
+
+.controles-notas {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px !important;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.controles-notas input {
+    flex: 1;
+    min-width: 220px;
+    padding: 12px 18px !important;
+    border-radius: 16px !important;
+    border: 1px solid var(--borde) !important;
+    background: var(--blanco);
+    color: var(--texto);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.controles-notas input:focus {
+    border-color: var(--rosa) !important;
+    box-shadow: 0 0 0 3px rgba(200, 92, 114, 0.12);
+}
+
+.boton-principal {
+    border: none;
+    background: var(--rosa);
+    color: var(--blanco);
+    padding: 12px 22px;
+    border-radius: 16px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.boton-principal:hover {
+    background: #b34e63;
+    transform: translateY(-2px);
+}
+
+
+/* =========================
+   5. TARJETAS DE NOTAS
+========================= */
+
+.cartas-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 18px !important;
+}
+
+.carta {
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: 22px;
+    padding: 30px;
+    line-height: 1.8;
+    box-shadow: 0 10px 30px rgba(100, 50, 60, 0.04);
+    transition: 0.2s;
+}
+
+.carta:hover {
+    border-color: var(--rosa);
+}
+
+.carta .fecha {
+    color: var(--rosa);
+    font-size: 13px;
+    margin-bottom: 0;
+}
+
+.carta p {
+    color: var(--texto);
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+
+/* =========================
+   6. MODAL Y FORMULARIO
+========================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(35, 20, 25, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+    backdrop-filter: blur(4px);
+}
+
+.modal-contenido {
+    position: relative;
+    background: var(--blanco);
+    max-width: 480px;
+    width: 100%;
+    padding: 40px 30px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.modal h2 {
+    font-family: "Playfair Display", serif;
+    font-size: 26px;
+    margin-bottom: 20px;
+}
+
+.cerrar {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    border: none;
+    background: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--secundario);
+}
+
+.modal textarea {
+    width: 100%;
+    padding: 15px !important;
+    border-radius: 16px !important;
+    border: 1px solid var(--borde) !important;
+    background: var(--fondo);
+    color: var(--texto);
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    outline: none;
+    transition: 0.2s;
+}
+
+.modal textarea:focus {
+    border-color: var(--rosa) !important;
+    background: var(--blanco);
+}
+
+.modal form .boton-principal {
+    width: 100%;
+    margin-top: 15px;
+    padding: 14px;
+    border-radius: 16px;
+}
+
+
+/* =========================
+   7. RESPONSIVE
+========================= */
+
+@media (max-width: 700px) {
+
+    .navbar {
+        padding: 12px 15px;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .navbar nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+        width: 100%;
+    }
+
+    .navbar nav a,
+    .cerrar-sesion {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+
+    .seccion {
+        padding: 35px 15px;
+    }
+
+    .controles-notas {
+        flex-direction: column;
+    }
+
+    .controles-notas input,
+    .boton-principal {
+        width: 100%;
+    }
+
+    .carta {
+        padding: 20px;
+    }
+
+}

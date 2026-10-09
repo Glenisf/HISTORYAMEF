@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Historia ❤️ - Recuerdos</title>
+    
+    <link rel="stylesheet" href="../css/estilos.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+
+    <style>
+        .encabezado-recuerdos {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .recuerdos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .recuerdo {
+            background: #ffffff;
+            border: 1px solid var(--borde, #f0d9de);
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            transition: transform 0.25s ease;
+        }
+
+        .recuerdo:hover {
+            transform: translateY(-4px);
+        }
+
+        .recuerdo-foto {
+            width: 100%;
+            height: 220px;
+            border-radius: 14px;
+            object-fit: cover;
+            background: #fdf0f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .recuerdo-foto img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .recuerdo h3 {
+            font-size: 17px;
+            color: var(--texto, #2d2426);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .recuerdo p {
+            font-size: 14px;
+            color: var(--secundario, #806f72);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .recuerdo span {
+            font-size: 12px;
+            color: var(--rosa, #c85c72);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">❤️ Nuestra historia</div>
+        <nav>
+            <a href="../home.html">Inicio</a>
+            <a href="notas.html">Notita</a>
+            <a href="cartas.html">Cartas</a>
+            <a href="recuerdos.html" class="active">Recuerdos</a>
+            <button class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="seccion activa">
+            <a href="../index.html" class="volver">← Volver</a>
+
+            <div class="pagina">
+                <p class="pequeno">NUESTROS RECUERDOS</p>
+                
+                <div class="encabezado-recuerdos">
+                    <h1 style="margin: 0; font-size: clamp(30px, 5vw, 48px);">Momentos que guardo ❤️</h1>
+                    <button 
+                        type="button" 
+                        onclick="abrirModalNuevo()"
+                        style="
+                            background-color: #c85c72 !important;
+                            color: #ffffff !important;
+                            border: none !important;
+                            padding: 12px 24px !important;
+                            border-radius: 30px !important;
+                            font-size: 14px !important;
+                            font-weight: 600 !important;
+                            font-family: inherit !important;
+                            cursor: pointer !important;
+                            width: auto !important;
+                            height: auto !important;
+                            display: inline-flex !important;
+                            align-items: center !important;
+                            justify-content: center !important;
+                            white-space: nowrap !important;
+                            box-shadow: 0 4px 12px rgba(200, 92, 114, 0.25) !important;
+                        "
+                    >
+                        + Nuevo recuerdo
+                    </button>
+                </div>
+
+                <!-- Grid de Recuerdos -->
+                <div id="contenedorRecuerdos" class="recuerdos-grid">
+                    <p>Cargando recuerdos...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal: Nuevo Recuerdo -->
+    <div id="modalNuevoRecuerdo" class="modal">
+        <div class="modal-contenido">
+            <button type="button" class="cerrar" onclick="cerrarModal()">×</button>
+            <h2>Guardar Recuerdo 📸</h2>
+            <form id="formRecuerdo" onsubmit="event.preventDefault(); guardarRecuerdo();">
+                <input 
+                    type="text" 
+                    id="tituloRecuerdo" 
+                    placeholder="Título del momento (ej: Nuestro viaje)" 
+                    required 
+                    style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #f0d9de; margin-top: 15px; outline: none; font-family: inherit; box-sizing: border-box;"
+                >
+                <input 
+                    type="date" 
+                    id="fechaRecuerdo" 
+                    required 
+                    style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #f0d9de; margin-top: 10px; outline: none; font-family: inherit; box-sizing: border-box; color: #555;"
+                >
+                <textarea 
+                    id="descripcionRecuerdo" 
+                    placeholder="Escriba una pequeña descripción..." 
+                    rows="4" 
+                    required 
+                    style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #f0d9de; margin-top: 10px; outline: none; font-family: inherit; resize: vertical; box-sizing: border-box;"
+                ></textarea>
+                
+                <label style="display: block; text-align: left; margin-top: 10px; font-size: 13px; color: #806f72;">Foto del recuerdo:</label>
+                <input 
+                    type="file" 
+                    id="archivoFoto" 
+                    accept="image/*"
+                    style="width: 100%; padding: 8px; margin-top: 5px; font-family: inherit;"
+                >
+
+                <button 
+                    type="button" 
+                    id="btnGuardarRecuerdo"
+                    onclick="guardarRecuerdo()" 
+                    style="
+                        width: 100%;
+                        background-color: #c85c72;
+                        color: white;
+                        border: none;
+                        padding: 12px;
+                        border-radius: 15px;
+                        font-weight: 600;
+                        font-family: inherit;
+                        cursor: pointer;
+                        margin-top: 20px;
+                    "
+                >
+                    Guardar Recuerdo
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SDK Oficial de Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/script.js"></script>
+
+    <script>
+        const SUPABASE_URL = 'https://pchccjflbbgwgvwbzxdf.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_wqYYELBreJMpd4_RdadZiw_EUpW2Z5x';
+        
+        const clientSupabase = (typeof supabaseClient !== 'undefined') 
+            ? supabaseClient 
+            : supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        function abrirModalNuevo() {
+            const modal = document.getElementById('modalNuevoRecuerdo');
+            if (modal) {
+                modal.style.display = 'flex';
+                modal.classList.add('activo');
+            }
+        }
+
+        function cerrarModal() {
+            const modal = document.getElementById('modalNuevoRecuerdo');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.classList.remove('activo');
+            }
+        }
+
+        // Función para optimizar/comprimir imágenes en el navegador antes de subir
+        function optimizarImagen(archivo) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(archivo);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const maxAncho = 1200; // Ancho máximo suficiente para web
+                        let ancho = img.width;
+                        let alto = img.height;
+
+                        if (ancho > maxAncho) {
+                            alto = Math.round((alto * maxAncho) / ancho);
+                            ancho = maxAncho;
+                        }
+
+                        canvas.width = ancho;
+                        canvas.height = alto;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, ancho, alto);
+
+                        canvas.toBlob((blob) => {
+                            resolve(blob);
+                        }, 'image/jpeg', 0.8); // Compresión al 80%
+                    };
+                };
+            });
+        }
+
+        // Cargar recuerdos desde Supabase
+        async function cargarRecuerdos() {
+            const contenedor = document.getElementById('contenedorRecuerdos');
+            if (!contenedor) return;
+
+            try {
+                const { data: recuerdos, error } = await clientSupabase
+                    .from('recuerdos')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error("Error al obtener recuerdos:", error);
+                    contenedor.innerHTML = `<p>Error de base de datos: ${error.message}</p>`;
+                    return;
+                }
+
+                renderizarRecuerdos(recuerdos || []);
+            } catch (err) {
+                console.error("Excepción al cargar recuerdos:", err);
+                contenedor.innerHTML = `<p style="color: red;">Error inesperado al cargar recuerdos.</p>`;
+            }
+        }
+
+        // Renderizar la cuadrícula
+        function renderizarRecuerdos(lista) {
+            const contenedor = document.getElementById('contenedorRecuerdos');
+            if (!contenedor) return;
+
+            if (lista.length === 0) {
+                contenedor.innerHTML = '<p>No hay recuerdos guardados aún. ¡Añada el primero!</p>';
+                return;
+            }
+
+            contenedor.innerHTML = '';
+            lista.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'recuerdo';
+
+                const fotoHtml = item.imagen_url 
+                    ? `<div class="recuerdo-foto"><img src="${item.imagen_url}" alt="${item.titulo}"></div>`
+                    : `<div class="recuerdo-foto">📷</div>`;
+
+                let fechaFormateada = item.fecha || '';
+                if (fechaFormateada.includes('-')) {
+                    const partes = fechaFormateada.split('-');
+                    fechaFormateada = `${partes[2]} / ${partes[1]} / ${partes[0]}`;
+                }
+
+                div.innerHTML = `
+                    ${fotoHtml}
+                    <h3>${item.titulo}</h3>
+                    <p>${item.descripcion || ''}</p>
+                    <span>${fechaFormateada}</span>
+                `;
+                contenedor.appendChild(div);
+            });
+        }
+
+        // Guardar recuerdo
+        async function guardarRecuerdo() {
+            const titulo = document.getElementById('tituloRecuerdo').value.trim();
+            const fecha = document.getElementById('fechaRecuerdo').value;
+            const descripcion = document.getElementById('descripcionRecuerdo').value.trim();
+            const archivoInput = document.getElementById('archivoFoto');
+            const btn = document.getElementById('btnGuardarRecuerdo');
+
+            if (!titulo || !fecha || !descripcion) {
+                alert("Por favor complete el título, la fecha y la descripción.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Subiendo foto y guardando...';
+
+            let imagenUrl = null;
+
+            if (archivoInput.files.length > 0) {
+                const archivoOriginal = archivoInput.files[0];
+                
+                // Comprimir la foto antes de subir
+                const fotoOptimizada = await optimizarImagen(archivoOriginal);
+                const fileName = `${Date.now()}.jpg`;
+
+                const { data: uploadData, error: uploadError } = await clientSupabase
+                    .storage
+                    .from('recuerdos')
+                    .upload(fileName, fotoOptimizada, { contentType: 'image/jpeg' });
+
+                if (uploadError) {
+                    console.error('Error al subir imagen:', uploadError);
+                } else {
+                    const { data: publicUrlData } = clientSupabase
+                        .storage
+                        .from('recuerdos')
+                        .getPublicUrl(fileName);
+
+                    imagenUrl = publicUrlData.publicUrl;
+                }
+            }
+
+            const { error } = await clientSupabase
+                .from('recuerdos')
+                .insert([{ 
+                    titulo: titulo, 
+                    fecha: fecha, 
+                    descripcion: descripcion, 
+                    imagen_url: imagenUrl 
+                }]);
+
+            btn.disabled = false;
+            btn.textContent = 'Guardar Recuerdo';
+
+            if (error) {
+                alert('Error al guardar el recuerdo:\n' + error.message);
+                console.error(error);
+            } else {
+                document.getElementById('tituloRecuerdo').value = '';
+                document.getElementById('fechaRecuerdo').value = '';
+                document.getElementById('descripcionRecuerdo').value = '';
+                archivoInput.value = '';
+                cerrarModal();
+                cargarRecuerdos();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarRecuerdos();
+            if (typeof verificarSesion === 'function') {
+                verificarSesion();
+            }
+        });
+    </script>
+</body>
+</html>

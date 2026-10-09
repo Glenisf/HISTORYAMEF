@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Historia ❤️ - Universo</title>
+    
+    <link rel="stylesheet" href="../css/estilos.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            background: #05020a;
+            color: #ffffff;
+            font-family: "DM Sans", sans-serif;
+        }
+
+        .navbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 20;
+            background: rgba(5, 2, 10, 0.6);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(240, 217, 222, 0.15);
+        }
+
+        .navbar nav a, .navbar .logo, .cerrar-sesion {
+            color: #f8e5e9 !important;
+        }
+
+        #canvas-contenedor {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* FOTO DEL SOL CENTRAL (SUPERPUESTA Y GARANTIZADA) */
+        .sol-central-contenedor {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            z-index: 5;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 50px rgba(200, 92, 114, 0.9), 0 0 100px rgba(200, 92, 114, 0.5);
+            background: radial-gradient(circle, rgba(200,92,114,0.4) 0%, rgba(5,2,10,0) 70%);
+            padding: 10px;
+        }
+
+        .sol-central-contenedor img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .interfaz-sorpresa {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .titulo-galaxia {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(24px, 4vw, 36px);
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(200, 92, 114, 0.8);
+            margin-bottom: 8px;
+        }
+
+        .subtitulo-galaxia {
+            font-size: 14px;
+            color: #f8e5e9;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">❤️ Nuestra historia</div>
+        <nav>
+            <a href="../home.html">Inicio</a>
+            <a href="notas.html">Notita</a>
+            <a href="cartas.html">Cartas</a>
+            <a href="recuerdos.html">Recuerdos</a>
+            <a href="sorpresa.html" class="active">Sorpresa</a>
+            <button class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+        </nav>
+    </header>
+
+    <!-- FOTO CENTRAL QUE SÍ O SÍ MUESTRA LA IMAGEN LOCAL -->
+    <div class="sol-central-contenedor">
+        <img src="../img/img.jpg" alt="Ella">
+    </div>
+
+    <div id="canvas-contenedor"></div>
+
+    <div class="interfaz-sorpresa">
+        <h1 class="titulo-galaxia">Eres el centro de mi universo ❤️</h1>
+        <p class="subtitulo-galaxia">Arrastre con el ratón o con el dedo para mover el universo</p>
+    </div>
+
+    <!-- SDK de Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="../js/script.js"></script>
+
+    <script>
+        // -------------------------------------------------------------
+        // GENERADOR DE MÁS DE 200 FRASES
+        // -------------------------------------------------------------
+        const cualidades = ["sonrisa", "mirada", "forma de ser", "amabilidad", "voz", "abrazo", "cariño", "presencia", "ternura", "alegría", "paz", "luz", "fuerza", "dulzura", "belleza"];
+        const verbos = ["ilumina", "alegra", "enamora", "inspira", "motiva", "calma", "transforma", "guía", "llena", "conforta", "embellece", "completa", "acompaña", "abrazas"];
+        const complementos = ["mi mundo", "mi corazón", "mis días", "cada instante", "mi vida entera", "mi alma", "mi pensamiento", "mi universo", "cada segundo", "mi camino", "mi presente", "mi destino"];
+
+        let frases = [
+            "Eres el centro de mi universo ❤️",
+            "Mi lugar favorito es a tu lado 🫂",
+            "Tu sonrisa me ilumina el día ✨",
+            "Gracias por existir 🌹",
+            "Contigo todo es mejor 🥰",
+            "Amo cada segundo juntos ⏳",
+            "Eres mi sueño hecho realidad 💫",
+            "Siempre en mi mente y corazón 💓",
+            "Tu felicidad es la mía 💕",
+            "Nuestra historia es hermosa 📖",
+            "El mejor pensamiento de mi día 🌙",
+            "Me haces increíblemente feliz 😊",
+            "Juntos en cada paso 👣",
+            "Un amor para siempre ♾️",
+            "Te quiero infinitamente 💖",
+            "Eres mi persona favorita 🌟"
+        ];
+
+        while (frases.length < 220) {
+            const c = cualidades[Math.floor(Math.random() * cualidades.length)];
+            const v = verbos[Math.floor(Math.random() * verbos.length)];
+            const comp = complementos[Math.floor(Math.random() * complementos.length)];
+            const fraseEspecial = `Tu ${c} ${v} ${comp} ❤️`;
+            if (!frases.includes(fraseEspecial)) {
+                frases.push(fraseEspecial);
+            }
+        }
+
+        // -------------------------------------------------------------
+        // MOTOR 3D Y GALAXIA DE ÓRBITAS
+        // -------------------------------------------------------------
+        let escena, camara, renderizador, grupoGalaxia;
+        let arrastrando = false;
+        let previoMouseX = 0, previoMouseY = 0;
+
+        function iniciarUniverso() {
+            const contenedor = document.getElementById('canvas-contenedor');
+
+            escena = new THREE.Scene();
+            escena.fog = new THREE.FogExp2(0x05020a, 0.0008);
+
+            camara = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
+            camara.position.z = 900;
+
+            renderizador = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderizador.setSize(window.innerWidth, window.innerHeight);
+            renderizador.setPixelRatio(window.devicePixelRatio);
+            contenedor.appendChild(renderizador.domElement);
+
+            grupoGalaxia = new THREE.Group();
+            escena.add(grupoGalaxia);
+
+            crearEstrellas();
+            crearFrasesOrbitantes();
+
+            document.addEventListener('mousedown', () => arrastrando = true);
+            document.addEventListener('mouseup', () => arrastrando = false);
+            document.addEventListener('mousemove', onMouseMove);
+            
+            document.addEventListener('touchstart', (e) => {
+                arrastrando = true;
+                previoMouseX = e.touches[0].clientX;
+                previoMouseY = e.touches[0].clientY;
+            });
+            document.addEventListener('touchend', () => arrastrando = false);
+            document.addEventListener('touchmove', onTouchMove);
+
+            window.addEventListener('resize', onWindowResize);
+
+            animar();
+        }
+
+        function crearFrasesOrbitantes() {
+            const totalFrases = frases.length;
+            
+            frases.forEach((texto, i) => {
+                const texturaTexto = generarTexturaFrase(texto);
+                const materialTexto = new THREE.SpriteMaterial({ map: texturaTexto, transparent: true });
+                const sprite = new THREE.Sprite(materialTexto);
+
+                const phi = Math.acos(-1 + (2 * i) / totalFrases);
+                const theta = Math.sqrt(totalFrases * Math.PI) * phi;
+                const radio = 280 + Math.random() * 480;
+
+                sprite.position.x = radio * Math.cos(theta) * Math.sin(phi);
+                sprite.position.y = radio * Math.sin(theta) * Math.sin(phi);
+                sprite.position.z = radio * Math.cos(phi);
+
+                sprite.scale.set(150, 38, 1);
+                grupoGalaxia.add(sprite);
+            });
+        }
+
+        function generarTexturaFrase(mensaje) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+
+            ctx.font = 'Bold 24px "DM Sans", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor = '#c85c72';
+            ctx.shadowBlur = 10;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(mensaje, canvas.width / 2, canvas.height / 2);
+
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        function crearEstrellas() {
+            const numEstrellas = 2500;
+            const pos = new Float32Array(numEstrellas * 3);
+
+            for (let i = 0; i < numEstrellas * 3; i += 3) {
+                pos[i] = (Math.random() - 0.5) * 2500;
+                pos[i + 1] = (Math.random() - 0.5) * 2500;
+                pos[i + 2] = (Math.random() - 0.5) * 2500;
+            }
+
+            const geo = new THREE.BufferGeometry();
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            const mat = new THREE.PointsMaterial({ color: 0xf8e5e9, size: 2, transparent: true, opacity: 0.8 });
+            
+            const estrellas = new THREE.Points(geo, mat);
+            escena.add(estrellas);
+        }
+
+        function onMouseMove(event) {
+            if (arrastrando) {
+                const deltaX = event.clientX - previoMouseX;
+                const deltaY = event.clientY - previoMouseY;
+                grupoGalaxia.rotation.y += deltaX * 0.005;
+                grupoGalaxia.rotation.x += deltaY * 0.005;
+            }
+            previoMouseX = event.clientX;
+            previoMouseY = event.clientY;
+        }
+
+        function onTouchMove(event) {
+            if (arrastrando && event.touches.length > 0) {
+                const deltaX = event.touches[0].clientX - previoMouseX;
+                const deltaY = event.touches[0].clientY - previoMouseY;
+                grupoGalaxia.rotation.y += deltaX * 0.005;
+                grupoGalaxia.rotation.x += deltaY * 0.005;
+                previoMouseX = event.touches[0].clientX;
+                previoMouseY = event.touches[0].clientY;
+            }
+        }
+
+        function onWindowResize() {
+            camara.aspect = window.innerWidth / window.innerHeight;
+            camara.updateProjectionMatrix();
+            renderizador.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animar() {
+            requestAnimationFrame(animar);
+
+            grupoGalaxia.rotation.y += 0.0018;
+            grupoGalaxia.rotation.x += 0.0005;
+
+            renderizador.render(escena, camara);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            iniciarUniverso();
+            if (typeof verificarSesion === 'function') {
+                verificarSesion();
+            }
+        });
+    </script>
+</body>
+</html>

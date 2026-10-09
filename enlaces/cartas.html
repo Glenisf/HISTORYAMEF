@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Historia ❤️ - Cartas</title>
+    
+    <link rel="stylesheet" href="../css/estilos.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">❤️ Nuestra historia</div>
+        <nav>
+            <a href="../home.html">Inicio</a>
+            <a href="notas.html">Notita</a>
+            <a href="cartas.html" class="active">Cartas</a>
+            <a href="recuerdos.html">Recuerdos</a>
+            <button class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="seccion activa">
+            <a href="../index.html" class="volver">← Volver</a>
+
+            <div class="pagina">
+                <p class="pequeno">CARTITAS</p>
+                
+                <!-- Encabezado con título y botón alineados -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px;">
+                    <h1 style="margin: 0; font-size: clamp(30px, 5vw, 48px);">Para diferentes momentos 💌</h1>
+                    <button 
+                        type="button" 
+                        onclick="abrirModalCrear()"
+                        style="
+                            background-color: #c85c72 !important;
+                            color: #ffffff !important;
+                            border: none !important;
+                            padding: 12px 24px !important;
+                            border-radius: 30px !important;
+                            font-size: 14px !important;
+                            font-weight: 600 !important;
+                            font-family: inherit !important;
+                            cursor: pointer !important;
+                            width: auto !important;
+                            height: auto !important;
+                            display: inline-flex !important;
+                            align-items: center !important;
+                            justify-content: center !important;
+                            white-space: nowrap !important;
+                            box-shadow: 0 4px 12px rgba(200, 92, 114, 0.25) !important;
+                        "
+                    >
+                        + Escribir nueva carta
+                    </button>
+                </div>
+
+                <!-- Contenedor dinámico de Cartas desde Supabase -->
+                <div id="contenedorCartas" class="cartas-grid">
+                    <p>Cargando cartas...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal 1: Leer Carta -->
+    <div id="modalLecturaCarta" class="modal">
+        <div class="modal-contenido">
+            <button type="button" class="cerrar" onclick="cerrarModal('modalLecturaCarta')">×</button>
+            <span id="modalCartaIcono" class="sorpresa-icono">💌</span>
+            <h2 id="modalCartaTitulo">Título</h2>
+            <div id="modalCartaContenido" class="texto-carta"></div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Crear Nueva Carta -->
+    <div id="modalNuevaCarta" class="modal">
+        <div class="modal-contenido">
+            <button type="button" class="cerrar" onclick="cerrarModal('modalNuevaCarta')">×</button>
+            <h2>Nueva Carta 💌</h2>
+            <form id="formNuevaCarta" onsubmit="event.preventDefault(); guardarCarta();">
+                <input 
+                    type="text" 
+                    id="tituloCarta" 
+                    placeholder="Título (ej: Abra cuando esté estresada)" 
+                    required 
+                    style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #f0d9de; margin-top: 15px; outline: none; font-family: inherit; box-sizing: border-box;"
+                >
+                <input 
+                    type="text" 
+                    id="iconoCarta" 
+                    placeholder="Emoji (ej: 💌, 🥺, 🫂, ❤️)" 
+                    value="💌" 
+                    style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #f0d9de; margin-top: 10px; outline: none; font-family: inherit; box-sizing: border-box;"
+                >
+                <textarea 
+                    id="contenidoCarta" 
+                    placeholder="Escriba aquí el contenido de la carta..." 
+                    rows="5" 
+                    required 
+                    style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #f0d9de; margin-top: 10px; outline: none; font-family: inherit; resize: vertical; box-sizing: border-box;"
+                ></textarea>
+                <button 
+                    type="button" 
+                    onclick="guardarCarta()" 
+                    style="
+                        width: 100%;
+                        background-color: #c85c72;
+                        color: white;
+                        border: none;
+                        padding: 12px;
+                        border-radius: 15px;
+                        font-weight: 600;
+                        font-family: inherit;
+                        cursor: pointer;
+                        margin-top: 20px;
+                    "
+                >
+                    Publicar Carta
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SDK Oficial de Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/script.js"></script>
+
+    <script>
+        const SUPABASE_URL = 'https://pchccjflbbgwgvwbzxdf.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_wqYYELBreJMpd4_RdadZiw_EUpW2Z5x';
+        
+        const clientSupabase = (typeof supabaseClient !== 'undefined') 
+            ? supabaseClient 
+            : supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let todasLasCartas = [];
+
+        function abrirModalCrear() {
+            const modal = document.getElementById('modalNuevaCarta');
+            if (modal) {
+                modal.style.display = 'flex';
+                modal.classList.add('activo');
+            }
+        }
+
+        function cerrarModal(idModal) {
+            const modal = document.getElementById(idModal);
+            if (modal) {
+                modal.style.display = 'none';
+                modal.classList.remove('activo');
+            }
+        }
+
+        async function cargarCartas() {
+            const contenedor = document.getElementById('contenedorCartas');
+            if (!contenedor) return;
+
+            try {
+                const { data: cartas, error } = await clientSupabase
+                    .from('cartas')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error("Error al obtener cartas:", error);
+                    contenedor.innerHTML = `<p>Error de base de datos: ${error.message}</p>`;
+                    return;
+                }
+
+                todasLasCartas = cartas || [];
+                renderizarCartas(todasLasCartas);
+            } catch (err) {
+                console.error("Excepción al cargar cartas:", err);
+                contenedor.innerHTML = `<p style="color: red;">Error inesperado al cargar las cartas.</p>`;
+            }
+        }
+
+        function renderizarCartas(lista) {
+            const contenedor = document.getElementById('contenedorCartas');
+            if (!contenedor) return;
+
+            if (!lista || lista.length === 0) {
+                contenedor.innerHTML = '<p>No hay cartas guardadas aún. ¡Escriba la primera!</p>';
+                return;
+            }
+
+            contenedor.innerHTML = '';
+            lista.forEach(carta => {
+                const btn = document.createElement('button');
+                btn.className = 'carta-card';
+                btn.onclick = () => verCarta(carta.titulo, carta.contenido, carta.icono || '💌');
+                btn.innerHTML = `
+                    <span>${carta.icono || '💌'}</span>
+                    <h3>${carta.titulo}</h3>
+                `;
+                contenedor.appendChild(btn);
+            });
+        }
+
+        function verCarta(titulo, texto, icono) {
+            document.getElementById('modalCartaIcono').textContent = icono;
+            document.getElementById('modalCartaTitulo').textContent = titulo;
+            document.getElementById('modalCartaContenido').innerHTML = `<p style="margin-top: 15px; line-height: 1.7; color: var(--secundario);">${texto.replace(/\n/g, '<br>')}</p>`;
+            
+            const modal = document.getElementById('modalLecturaCarta');
+            if (modal) {
+                modal.style.display = 'flex';
+                modal.classList.add('activo');
+            }
+        }
+
+        async function guardarCarta() {
+            const titulo = document.getElementById('tituloCarta').value.trim();
+            const icono = document.getElementById('iconoCarta').value.trim() || '💌';
+            const contenido = document.getElementById('contenidoCarta').value.trim();
+
+            if (!titulo || !contenido) {
+                alert("Por favor complete el título y el contenido de la carta.");
+                return;
+            }
+
+            const { error } = await clientSupabase
+                .from('cartas')
+                .insert([{ titulo: titulo, contenido: contenido, icono: icono }]);
+
+            if (error) {
+                alert('Error al publicar la carta:\n' + error.message);
+                console.error('Error Supabase:', error);
+            } else {
+                document.getElementById('tituloCarta').value = '';
+                document.getElementById('contenidoCarta').value = '';
+                document.getElementById('iconoCarta').value = '💌';
+                cerrarModal('modalNuevaCarta');
+                cargarCartas();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarCartas();
+            if (typeof verificarSesion === 'function') {
+                verificarSesion();
+            }
+        });
+    </script>
+</body>
+</html>

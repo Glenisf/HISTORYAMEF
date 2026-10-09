@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nuestra Historia ❤️</title>
+
+    <link rel="stylesheet" href="css/login.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <main class="login-page">
+
+        <!-- Decoración -->
+        <div class="decor decor-1"></div>
+        <div class="decor decor-2"></div>
+
+        <section class="login-container">
+
+            <!-- Lado izquierdo -->
+            <div class="login-intro">
+
+                <div class="logo">
+                    <span>❤️</span>
+                </div>
+
+                <h1>
+                    Nuestra<br>
+                    historia
+                </h1>
+
+                <p>
+                    Un pequeño espacio para guardar
+                    todo aquello que hace especial
+                    nuestra historia.
+                </p>
+
+                <div class="intro-decoration">
+                    <span>♡</span>
+                    <span>♡</span>
+                    <span>♡</span>
+                </div>
+
+            </div>
+
+
+            <!-- Lado derecho -->
+            <div class="login-box">
+
+                <div id="loginForm" class="form active">
+
+                    <p class="form-label">
+                        BIENVENIDO
+                    </p>
+
+                    <h2>
+                        Iniciar sesión
+                    </h2>
+
+                    <p class="form-description">
+                        Entre a su espacio especial.
+                    </p>
+
+                    <form id="formLogin">
+
+                        <div class="input-group">
+                            <label for="loginEmail">
+                                Correo electrónico
+                            </label>
+                            <input
+                                type="email"
+                                id="loginEmail"
+                                placeholder="correo@ejemplo.com"
+                                required
+                            >
+                        </div>
+
+                        <div class="input-group">
+                            <label for="loginPassword">
+                                Contraseña
+                            </label>
+                            <input
+                                type="password"
+                                id="loginPassword"
+                                placeholder="••••••••"
+                                required
+                            >
+                        </div>
+
+                        <div class="forgot">
+                            <button type="button" onclick="alert('Contacte al administrador para restablecer su contraseña.')">
+                                ¿Olvidó su contraseña?
+                            </button>
+                        </div>
+
+                        <button
+                            type="submit"
+                            id="btnSubmit"
+                            class="main-button"
+                        >
+                            Iniciar sesión
+                            <span>→</span>
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <footer>
+            Hecho con ❤️ para guardar lo que importa.
+        </footer>
+
+    </main>
+
+    <!-- SDK Oficial de Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Script de lógica de autenticación -->
+    <script>
+        // 1. Configuración de credenciales de Supabase
+        const SUPABASE_URL = 'https://pchccjflbbgwgvwbzxdf.supabase.co'; // <-- Ponga aquí su URL de Data API
+        const SUPABASE_KEY = 'sb_publishable_wqYYELBreJMpd4_RdadZiw_EUpW2Z5x';            // <-- Ponga aquí su Publishable Key (sb_publishable_...)
+
+        let supabaseClient;
+
+        try {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            console.log("Cliente de Supabase inicializado correctamente.");
+        } catch (err) {
+            console.error("Error al inicializar Supabase:", err);
+        }
+
+        // 2. Controlar envío del formulario
+        document.addEventListener('DOMContentLoaded', () => {
+            const formLogin = document.getElementById('formLogin');
+
+            if (formLogin) {
+                formLogin.addEventListener('submit', async function(event) {
+                    // Detiene la recarga por defecto de la página
+                    event.preventDefault();
+
+                    const emailInput = document.getElementById('loginEmail');
+                    const passwordInput = document.getElementById('loginPassword');
+                    const btnSubmit = document.getElementById('btnSubmit');
+
+                    const email = emailInput.value.trim();
+                    const password = passwordInput.value;
+
+                    if (!email || !password) {
+                        alert("Por favor ingrese su correo y contraseña.");
+                        return;
+                    }
+
+                    // Cambiar texto del botón para indicar progreso
+                    btnSubmit.disabled = true;
+                    btnSubmit.innerHTML = 'Verificando...';
+
+                    try {
+                        const { data, error } = await supabaseClient.auth.signInWithPassword({
+                            email: email,
+                            password: password
+                        });
+
+                        if (error) {
+                            console.error("Error de autenticación:", error);
+                            alert("Error al iniciar sesión: " + error.message);
+                            btnSubmit.disabled = false;
+                            btnSubmit.innerHTML = 'Iniciar sesión <span>→</span>';
+                        } else {
+                            console.log("Sesión iniciada con éxito:", data);
+                            alert("¡Bienvenido! Redirigiendo...");
+                            // Redirección al archivo principal
+                            window.location.href = 'home.html';
+                        }
+                    } catch (err) {
+                        console.error("Error de red o ejecución:", err);
+                        alert("Ocurrió un error inesperado al intentar conectar.");
+                        btnSubmit.disabled = false;
+                        btnSubmit.innerHTML = 'Iniciar sesión <span>→</span>';
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>
